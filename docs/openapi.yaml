@@ -3,7 +3,7 @@ info:
   title: Task API
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:8080
     description: Local development server
   - url: https://task-api-service-exqw.onrender.com
     description: Production server
@@ -18,6 +18,13 @@ paths:
       summary: List all tasks
       tags:
         - Tasks
+      parameters:
+        - name: completed
+          in: query
+          required: false
+          description: Filter tasks by completion status
+          schema:
+            type: boolean
       responses:
         '200':
           description: OK
@@ -27,6 +34,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid completed query parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: string
+              example:
+                error: Validation failed
+                details:
+                  - completed must be true or false
+
     post:
       summary: Create a new task
       tags:
